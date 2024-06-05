@@ -20,7 +20,7 @@
             height: 100vh;
             overflow-y: auto;
             position: fixed;
-            box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
         }
 
         .left-panel h1 {
@@ -34,7 +34,7 @@
             padding: 5px;
             margin-bottom: 3px;
             border-radius: 3px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             display: flex;
             align-items: center;
         }
@@ -53,6 +53,13 @@
             justify-content: center;
         }
 
+        .right-panel-btn {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+        }
+
         .btn {
             display: inline-block;
             margin: 10px;
@@ -65,12 +72,12 @@
             border-radius: 25px;
             cursor: pointer;
             transition: background 0.3s ease, box-shadow 0.3s ease;
-            box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
         }
 
         .btn:hover {
             background: linear-gradient(45deg, #1c86ee, #00bfff);
-            box-shadow: 0 5px 10px rgba(0,0,0,0.2);
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
         }
 
         .grid-container {
@@ -88,19 +95,19 @@
             border: 1px solid #ddd;
             border-radius: 10px;
             transition: background-color 0.3s ease, transform 0.3s ease;
-            box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
         }
 
         .grid-item.highlight {
             background-color: #ffcc00; /* 深黄色 */
             transform: scale(1.1);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         }
 
         .grid-item.final {
             background-color: #4caf50;
             transform: scale(1.1);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
             color: #fff;
             font-weight: bold;
         }
@@ -127,216 +134,219 @@
             border-radius: 5px;
             cursor: pointer;
             transition: background 0.3s ease, box-shadow 0.3s ease;
-            box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
         }
 
         .add-recipe button:hover {
             background: #1c86ee;
-            box-shadow: 0 5px 10px rgba(0,0,0,0.2);
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
         }
 
         /*指定id*/
         .right-panel h1 {
             margin-bottom: 0;
         }
+
         /* 添加到现有样式部分 */
         .right-panel #currentTime {
             margin-bottom: 5px;
-            margin-top: 5px;
+            margin-top: 10px;
             font-size: 1.2em;
             color: #666;
         }
     </style>
 </head>
 <body>
-    <div class="left-panel">
-        <h1>可选菜谱</h1>
-        <div class="recipe-list" id="recipeList"></div>
-        <button class="btn" id="selectAllButton">全选</button>
-        <div class="add-recipe">
-            <input type="text" id="newRecipeInput" placeholder="添加新菜谱">
-            <button class="btn" id="addRecipeButton">添加</button>
-        </div>
+<div class="left-panel">
+    <h1>可选菜谱</h1>
+    <div class="recipe-list" id="recipeList"></div>
+    <button class="btn" id="selectAllButton">全选</button>
+    <div class="add-recipe">
+        <input type="text" id="newRecipeInput" placeholder="添加新菜谱">
+        <button class="btn" id="addRecipeButton">添加</button>
     </div>
-    <div class="right-panel">
-        <h1>世纪难题：今天吃什么？</h1>
-        <p id="currentTime"></p>
+</div>
+<div class="right-panel">
+    <h1>世纪难题：今天吃什么？</h1>
+    <p id="currentTime"></p>
+    <div class="right-panel-btn">
         <button id="importButton" class="btn">导入菜谱</button>
-        <button id="startButton" class="btn">开始抽菜</button>
-        <div id="grid" class="grid-container"></div>
+        <button id="startButton" class="btn" style="background: linear-gradient(45deg, #00cc00, #33ff33);">开始抽菜</button>
     </div>
+    <div id="grid" class="grid-container"></div>
+</div>
 
-    <input type="file" id="fileInput" style="display: none;" accept=".xlsx">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
-    <script>
-        let recipes = [];
-        let stopScrolling = false;
-        let allSelected = true;
-        let gridSize;
+<input type="file" id="fileInput" style="display: none;" accept=".xlsx">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
+<script>
+    let recipes = [];
+    let stopScrolling = false;
+    let allSelected = true;
+    let gridSize;
 
-        function updateTime() {
-            const now = new Date();
-            const timeString = now.toLocaleString();
-            document.getElementById('currentTime').textContent = `${timeString}`;
-        }
+    function updateTime() {
+        const now = new Date();
+        const timeString = now.toLocaleString();
+        document.getElementById('currentTime').textContent = `${timeString}`;
+    }
 
-        setInterval(updateTime, 1000);
-        updateTime();  // 初始化时调用一次
+    setInterval(updateTime, 1000);
+    updateTime();  // 初始化时调用一次
 
-        document.getElementById('importButton').addEventListener('click', () => {
-            document.getElementById('fileInput').click();
-        });
+    document.getElementById('importButton').addEventListener('click', () => {
+        document.getElementById('fileInput').click();
+    });
 
-        document.getElementById('fileInput').addEventListener('change', (event) => {
-            const file = event.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    const data = new Uint8Array(e.target.result);
-                    const workbook = XLSX.read(data, { type: 'array' });
-                    const sheetName = workbook.SheetNames[0];
-                    const worksheet = workbook.Sheets[sheetName];
-                    const json = XLSX.utils.sheet_to_json(worksheet);
-                    recipes = json.map(item => item['店铺']).filter(item => item);
-                    displayRecipes();
-                    alert(`导入了${recipes.length}个菜谱`);
-                };
-                reader.readAsArrayBuffer(file);
-            }
-        });
-
-        document.getElementById('startButton').addEventListener('click', () => {
-            if (recipes.length === 0) {
-                alert('请先导入菜谱');
-                return;
-            }
-            startScrollAndCountdown();
-        });
-
-        document.getElementById('selectAllButton').addEventListener('click', () => {
-            const checkboxes = document.querySelectorAll('.recipe-item input');
-            checkboxes.forEach(checkbox => checkbox.checked = !allSelected);
-            allSelected = !allSelected;
-            document.getElementById('selectAllButton').textContent = allSelected ? '全选' : '取消全选';
-            updateGrid();
-        });
-
-        document.getElementById('addRecipeButton').addEventListener('click', () => {
-            const newRecipeInput = document.getElementById('newRecipeInput');
-            const newRecipe = newRecipeInput.value.trim();
-            if (newRecipe) {
-                recipes.push(newRecipe);
+    document.getElementById('fileInput').addEventListener('change', (event) => {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const data = new Uint8Array(e.target.result);
+                const workbook = XLSX.read(data, {type: 'array'});
+                const sheetName = workbook.SheetNames[0];
+                const worksheet = workbook.Sheets[sheetName];
+                const json = XLSX.utils.sheet_to_json(worksheet);
+                recipes = json.map(item => item['店铺']).filter(item => item);
                 displayRecipes();
-                newRecipeInput.value = '';
-            }
-        });
+                alert(`导入了${recipes.length}个菜谱`);
+            };
+            reader.readAsArrayBuffer(file);
+        }
+    });
 
-        function displayRecipes() {
-            const recipeList = document.getElementById('recipeList');
-            recipeList.innerHTML = '';
-            recipes.forEach((recipe, index) => {
-                const div = document.createElement('div');
-                div.className = 'recipe-item';
-                div.innerHTML = `
+    document.getElementById('startButton').addEventListener('click', () => {
+        if (recipes.length === 0) {
+            alert('请先导入菜谱');
+            return;
+        }
+        startScrollAndCountdown();
+    });
+
+    document.getElementById('selectAllButton').addEventListener('click', () => {
+        const checkboxes = document.querySelectorAll('.recipe-item input');
+        checkboxes.forEach(checkbox => checkbox.checked = !allSelected);
+        allSelected = !allSelected;
+        document.getElementById('selectAllButton').textContent = allSelected ? '全选' : '取消全选';
+        updateGrid();
+    });
+
+    document.getElementById('addRecipeButton').addEventListener('click', () => {
+        const newRecipeInput = document.getElementById('newRecipeInput');
+        const newRecipe = newRecipeInput.value.trim();
+        if (newRecipe) {
+            recipes.push(newRecipe);
+            displayRecipes();
+            newRecipeInput.value = '';
+        }
+    });
+
+    function displayRecipes() {
+        const recipeList = document.getElementById('recipeList');
+        recipeList.innerHTML = '';
+        recipes.forEach((recipe, index) => {
+            const div = document.createElement('div');
+            div.className = 'recipe-item';
+            div.innerHTML = `
                     <input type="checkbox" id="recipe${index}" checked>
                     <label for="recipe${index}">${recipe}</label>
                 `;
-                recipeList.appendChild(div);
-            });
+            recipeList.appendChild(div);
+        });
 
-            updateGrid();
-        }
+        updateGrid();
+    }
 
-        function updateGrid() {
-            const selectedRecipes = recipes.filter((recipe, index) => document.getElementById(`recipe${index}`).checked);
-            gridSize = Math.ceil(Math.sqrt(selectedRecipes.length));
-            const grid = document.getElementById('grid');
-            grid.innerHTML = '';
-            grid.style.gridTemplateColumns = `repeat(${gridSize}, 100px)`;
-            grid.style.gridTemplateRows = `repeat(${gridSize}, 100px)`;
-            selectedRecipes.forEach((recipe, index) => {
-                const div = document.createElement('div');
-                div.className = 'grid-item';
-                div.id = `grid-item-${index}`;
-                div.textContent = recipe;
-                grid.appendChild(div);
-            });
-        }
+    function updateGrid() {
+        const selectedRecipes = recipes.filter((recipe, index) => document.getElementById(`recipe${index}`).checked);
+        gridSize = Math.ceil(Math.sqrt(selectedRecipes.length));
+        const grid = document.getElementById('grid');
+        grid.innerHTML = '';
+        grid.style.gridTemplateColumns = `repeat(${gridSize}, 100px)`;
+        grid.style.gridTemplateRows = `repeat(${gridSize}, 100px)`;
+        selectedRecipes.forEach((recipe, index) => {
+            const div = document.createElement('div');
+            div.className = 'grid-item';
+            div.id = `grid-item-${index}`;
+            div.textContent = recipe;
+            grid.appendChild(div);
+        });
+    }
 
-        function scrollRecipes(finalIndex) {
-            stopScrolling = false;
-            const selectedRecipes = recipes.filter((recipe, index) => document.getElementById(`recipe${index}`).checked);
-            const totalGrids = selectedRecipes.length;
-            const minHighlights = 1;
-            const maxHighlights = 5;
-            const totalDuration = 5000; // 固定滚动时间为5秒
-            const highlightsPerGrid = Math.floor(Math.random() * (maxHighlights - minHighlights + 1)) + minHighlights; // 随机选择每个格子的高亮次数
+    function scrollRecipes(finalIndex) {
+        stopScrolling = false;
+        const selectedRecipes = recipes.filter((recipe, index) => document.getElementById(`recipe${index}`).checked);
+        const totalGrids = selectedRecipes.length;
+        const minHighlights = 1;
+        const maxHighlights = 5;
+        const totalDuration = 5000; // 固定滚动时间为5秒
+        const highlightsPerGrid = Math.floor(Math.random() * (maxHighlights - minHighlights + 1)) + minHighlights; // 随机选择每个格子的高亮次数
 
-            const totalHighlights = totalGrids * highlightsPerGrid;
-            const interval = totalDuration / (totalHighlights + finalIndex); // 每次高亮的时间间隔，确保停在 finalIndex
+        const totalHighlights = totalGrids * highlightsPerGrid;
+        const interval = totalDuration / (totalHighlights + finalIndex); // 每次高亮的时间间隔，确保停在 finalIndex
 
-            let currentHighlight = 0;
+        let currentHighlight = 0;
 
-            function updateScroll() {
-                if (currentHighlight > 0) {
-                    document.getElementById(`grid-item-${(currentHighlight - 1) % totalGrids}`).classList.remove('highlight');
-                } else if (currentHighlight === 0 && totalGrids > 0) {
-                    document.getElementById(`grid-item-${totalGrids - 1}`).classList.remove('highlight');
-                }
-
-                if (currentHighlight < totalHighlights + finalIndex) {
-                    document.getElementById(`grid-item-${currentHighlight % totalGrids}`).classList.add('highlight');
-                    currentHighlight++;
-                    setTimeout(updateScroll, interval);
-                } else {
-                    stopScrolling = true;
-                    lockRecipe(finalIndex);
-                }
+        function updateScroll() {
+            if (currentHighlight > 0) {
+                document.getElementById(`grid-item-${(currentHighlight - 1) % totalGrids}`).classList.remove('highlight');
+            } else if (currentHighlight === 0 && totalGrids > 0) {
+                document.getElementById(`grid-item-${totalGrids - 1}`).classList.remove('highlight');
             }
 
-            updateScroll();
-        }
-
-        function startScrollAndCountdown() {
-            const selectedRecipes = recipes.filter((recipe, index) => document.getElementById(`recipe${index}`).checked);
-            if (selectedRecipes.length === 0) {
-                alert('请至少选择一个菜谱');
-                return;
+            if (currentHighlight < totalHighlights + finalIndex) {
+                document.getElementById(`grid-item-${currentHighlight % totalGrids}`).classList.add('highlight');
+                currentHighlight++;
+                setTimeout(updateScroll, interval);
+            } else {
+                stopScrolling = true;
+                lockRecipe(finalIndex);
             }
-            const finalIndex = Math.floor(Math.random() * selectedRecipes.length);
-            console.log(`最终选择：${selectedRecipes[finalIndex]}`);
-            updateGrid();  // 每次开始抽取时更新格子
-            scrollRecipes(finalIndex);
         }
 
-        function lockRecipe(finalIndex) {
-            const gridItems = document.querySelectorAll('.grid-item');
-            gridItems.forEach(item => {
-                item.classList.remove('highlight', 'final');
+        updateScroll();
+    }
+
+    function startScrollAndCountdown() {
+        const selectedRecipes = recipes.filter((recipe, index) => document.getElementById(`recipe${index}`).checked);
+        if (selectedRecipes.length === 0) {
+            alert('请至少选择一个菜谱');
+            return;
+        }
+        const finalIndex = Math.floor(Math.random() * selectedRecipes.length);
+        console.log(`最终选择：${selectedRecipes[finalIndex]}`);
+        updateGrid();  // 每次开始抽取时更新格子
+        scrollRecipes(finalIndex);
+    }
+
+    function lockRecipe(finalIndex) {
+        const gridItems = document.querySelectorAll('.grid-item');
+        gridItems.forEach(item => {
+            item.classList.remove('highlight', 'final');
+        });
+        const finalItem = document.getElementById(`grid-item-${finalIndex}`);
+        finalItem.classList.add('highlight', 'final');
+        console.log(`最终选择：${finalItem.textContent}`);
+    }
+
+    function loadDefaultRecipes() {
+        fetch('caipu.xlsx')
+            .then(response => response.arrayBuffer())
+            .then(data => {
+                const workbook = XLSX.read(data, {type: 'array'});
+                const sheetName = workbook.SheetNames[0];
+                const worksheet = workbook.Sheets[sheetName];
+                const json = XLSX.utils.sheet_to_json(worksheet);
+                recipes = json.map(item => item['店铺']).filter(item => item);
+                displayRecipes();
+            })
+            .catch(error => {
+                console.error('Error loading default recipes:', error);
             });
-            const finalItem = document.getElementById(`grid-item-${finalIndex}`);
-            finalItem.classList.add('highlight', 'final');
-            console.log(`最终选择：${finalItem.textContent}`);
-        }
+    }
 
-        function loadDefaultRecipes() {
-            fetch('caipu.xlsx')
-                .then(response => response.arrayBuffer())
-                .then(data => {
-                    const workbook = XLSX.read(data, { type: 'array' });
-                    const sheetName = workbook.SheetNames[0];
-                    const worksheet = workbook.Sheets[sheetName];
-                    const json = XLSX.utils.sheet_to_json(worksheet);
-                    recipes = json.map(item => item['店铺']).filter(item => item);
-                    displayRecipes();
-                })
-                .catch(error => {
-                    console.error('Error loading default recipes:', error);
-                });
-        }
-
-        // 初始化显示默认菜谱
-        loadDefaultRecipes();
-    </script>
+    // 初始化显示默认菜谱
+    loadDefaultRecipes();
+</script>
 </body>
 </html>
