@@ -134,6 +134,18 @@
             background: #1c86ee;
             box-shadow: 0 5px 10px rgba(0,0,0,0.2);
         }
+
+        /*指定id*/
+        .right-panel h1 {
+            margin-bottom: 0;
+        }
+        /* 添加到现有样式部分 */
+        .right-panel #currentTime {
+            margin-bottom: 5px;
+            margin-top: 5px;
+            font-size: 1.2em;
+            color: #666;
+        }
     </style>
 </head>
 <body>
@@ -148,6 +160,7 @@
     </div>
     <div class="right-panel">
         <h1>世纪难题：今天吃什么？</h1>
+        <p id="currentTime"></p>
         <button id="importButton" class="btn">导入菜谱</button>
         <button id="startButton" class="btn">开始抽菜</button>
         <div id="grid" class="grid-container"></div>
@@ -160,6 +173,15 @@
         let stopScrolling = false;
         let allSelected = true;
         let gridSize;
+
+        function updateTime() {
+            const now = new Date();
+            const timeString = now.toLocaleString();
+            document.getElementById('currentTime').textContent = `${timeString}`;
+        }
+
+        setInterval(updateTime, 1000);
+        updateTime();  // 初始化时调用一次
 
         document.getElementById('importButton').addEventListener('click', () => {
             document.getElementById('fileInput').click();
